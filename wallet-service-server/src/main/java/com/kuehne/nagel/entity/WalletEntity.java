@@ -1,9 +1,6 @@
 package com.kuehne.nagel.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -12,16 +9,17 @@ public class WalletEntity {
 
     @Id
     @Column
-    private String walletId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long walletId;
 
     @Column
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
 
-    public String getWalletId() {
+    public Long getWalletId() {
         return walletId;
     }
 
-    public void setWalletId(String walletId) {
+    public void setWalletId(Long walletId) {
         this.walletId = walletId;
     }
 
