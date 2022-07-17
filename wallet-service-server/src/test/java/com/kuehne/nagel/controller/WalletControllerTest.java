@@ -5,6 +5,7 @@ import com.kuehne.nagel.exception.InsufficientFundsException;
 import com.kuehne.nagel.exception.WalletNotFoundException;
 import com.kuehne.nagel.model.WalletTransferModel;
 import com.kuehne.nagel.service.WalletService;
+import com.kuehne.nagel.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -93,7 +94,7 @@ public class WalletControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, stringResponseEntity.getStatusCode());
 
-        assertEquals("Wallet was not found", stringResponseEntity.getBody());
+        assertEquals(Constants.WALLET_WAS_NOT_FOUND, stringResponseEntity.getBody());
     }
 
     @Test
@@ -115,7 +116,7 @@ public class WalletControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, stringResponseEntity.getStatusCode());
 
-        assertEquals("Wallet was not found", stringResponseEntity.getBody());
+        assertEquals(Constants.WALLET_WAS_NOT_FOUND, stringResponseEntity.getBody());
     }
 
     @Test
@@ -137,7 +138,7 @@ public class WalletControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, stringResponseEntity.getStatusCode());
 
-        assertEquals("Wallet has insufficient funds", stringResponseEntity.getBody());
+        assertEquals(Constants.WALLET_HAS_INSUFFICIENT_FUNDS, stringResponseEntity.getBody());
     }
 
     @Test
@@ -148,7 +149,7 @@ public class WalletControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, stringResponseEntity.getStatusCode());
 
-        assertEquals("Wallet was not found", stringResponseEntity.getBody());
+        assertEquals(Constants.WALLET_WAS_NOT_FOUND, stringResponseEntity.getBody());
     }
 
     @Test
@@ -192,7 +193,7 @@ public class WalletControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
-        assertEquals("Wallet was not found", responseEntity.getBody());
+        assertEquals(Constants.WALLET_WAS_NOT_FOUND, responseEntity.getBody());
     }
 
     @Test
@@ -207,7 +208,7 @@ public class WalletControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
-        assertEquals("Wallet has insufficient funds", responseEntity.getBody());
+        assertEquals(Constants.WALLET_HAS_INSUFFICIENT_FUNDS, responseEntity.getBody());
     }
 
 }

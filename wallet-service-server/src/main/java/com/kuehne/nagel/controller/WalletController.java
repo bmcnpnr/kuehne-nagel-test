@@ -4,14 +4,13 @@ import com.kuehne.nagel.exception.InsufficientFundsException;
 import com.kuehne.nagel.exception.WalletNotFoundException;
 import com.kuehne.nagel.model.WalletTransferModel;
 import com.kuehne.nagel.service.WalletService;
+import com.kuehne.nagel.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-
-//TODO put strings into constant values
 
 @RestController
 public class WalletController {
@@ -40,7 +39,7 @@ public class WalletController {
             return ResponseEntity.ok("Wallet with id: " + walletId + " topped up by " + amount);
         } catch (WalletNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.WALLET_WAS_NOT_FOUND);
         }
     }
 
@@ -50,7 +49,7 @@ public class WalletController {
             return ResponseEntity.ok(walletService.getBalance(walletId).toPlainString());
         } catch (WalletNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.WALLET_WAS_NOT_FOUND);
         }
     }
 
@@ -61,10 +60,10 @@ public class WalletController {
             return ResponseEntity.ok("Wallet with id: " + walletId + " withdraw by " + amount);
         } catch (WalletNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.WALLET_WAS_NOT_FOUND);
         } catch (InsufficientFundsException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet has insufficient funds");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.WALLET_HAS_INSUFFICIENT_FUNDS);
         }
     }
 
@@ -79,11 +78,11 @@ public class WalletController {
                     + walletTransferModel.getFirstWalletId() + " to Wallet with id: " + walletTransferModel.getSecondWalletId());
         } catch (WalletNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.WALLET_WAS_NOT_FOUND);
 
         } catch (InsufficientFundsException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet has insufficient funds");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.WALLET_HAS_INSUFFICIENT_FUNDS);
 
         }
     }
