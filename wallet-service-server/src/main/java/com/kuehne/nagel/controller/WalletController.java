@@ -1,5 +1,6 @@
 package com.kuehne.nagel.controller;
 
+import com.kuehne.nagel.exception.InsufficientFundsException;
 import com.kuehne.nagel.exception.WalletNotFoundException;
 import com.kuehne.nagel.model.WalletTransferModel;
 import com.kuehne.nagel.service.WalletService;
@@ -41,19 +42,28 @@ public class WalletController {
         }
     }
 
-    @GetMapping("/wallets/{id}")
-    public ResponseEntity<String> checkWalletBalance(@PathVariable Long id) {
+    @GetMapping("/wallets/{walletId}")
+    public ResponseEntity<String> checkWalletBalance(@PathVariable Long walletId) {
         try {
-            return ResponseEntity.ok(walletService.getBalance(id).toPlainString());
+            return ResponseEntity.ok(walletService.getBalance(walletId).toPlainString());
         } catch (WalletNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
         }
     }
 
-    @PatchMapping("/wallets/{id}/withdrawal/{amount}")
-    public String withdrawFromWallet(@PathVariable Long id, @PathVariable BigDecimal amount) {
-        return "wallets withdraw";
+    @PatchMapping("/wallets/{walletId}/withdrawal/{amount}")
+    public ResponseEntity<String> withdrawFromWallet(@PathVariable Long walletId, @PathVariable BigDecimal amount) {
+        try {
+            walletService.withdrawFromWallet(walletId, amount);
+            return ResponseEntity.ok("Wallet with id: " + walletId + " withdraw by " + amount);
+        } catch (WalletNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
+        } catch (InsufficientFundsException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet has insufficient funds");
+        }
     }
 
     @PatchMapping("/wallets/transfer")

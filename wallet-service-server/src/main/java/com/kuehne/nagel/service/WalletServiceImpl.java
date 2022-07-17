@@ -1,6 +1,7 @@
 package com.kuehne.nagel.service;
 
 import com.kuehne.nagel.entity.WalletEntity;
+import com.kuehne.nagel.exception.InsufficientFundsException;
 import com.kuehne.nagel.exception.WalletNotFoundException;
 import com.kuehne.nagel.repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,21 @@ public class WalletServiceImpl implements WalletService {
         } else {
             WalletEntity walletEntity = byId.get();
             walletEntity.setBalance(walletEntity.getBalance().add(amount));
+            walletRepository.save(walletEntity);
+        }
+    }
+
+    @Override
+    public void withdrawFromWallet(Long walletId, BigDecimal amount) throws WalletNotFoundException, InsufficientFundsException {
+        Optional<WalletEntity> byId = walletRepository.findById(walletId);
+        if (!byId.isPresent()) {
+            throw new WalletNotFoundException();
+        } else {
+            WalletEntity walletEntity = byId.get();
+            if (walletEntity.getBalance().compareTo(amount) < 0) {
+                throw new InsufficientFundsException();
+            }
+            walletEntity.setBalance(walletEntity.getBalance().subtract((amount)));
             walletRepository.save(walletEntity);
         }
     }
