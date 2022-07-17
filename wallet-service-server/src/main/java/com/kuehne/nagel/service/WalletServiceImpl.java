@@ -18,7 +18,6 @@ public class WalletServiceImpl implements WalletService {
 
     private WalletRepository walletRepository;
 
-
     @Override
     @Transactional(readOnly = true)
     public List<WalletEntity> getAllWallets() {
