@@ -3,6 +3,7 @@ package com.kuehne.nagel.service;
 import com.kuehne.nagel.entity.WalletEntity;
 import com.kuehne.nagel.exception.InsufficientFundsException;
 import com.kuehne.nagel.exception.WalletNotFoundException;
+import com.kuehne.nagel.model.WalletTransferModel;
 import com.kuehne.nagel.repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,25 @@ public class WalletServiceImpl implements WalletService {
             }
             walletEntity.setBalance(walletEntity.getBalance().subtract((amount)));
             walletRepository.save(walletEntity);
+        }
+    }
+
+    @Override
+    public void transferFundsBetweenWallets(WalletTransferModel walletTransferModel) throws WalletNotFoundException, InsufficientFundsException {
+        Optional<WalletEntity> byIdFirst = walletRepository.findById(walletTransferModel.getFirstWalletId());
+        Optional<WalletEntity> byIdSecond = walletRepository.findById(walletTransferModel.getSecondWalletId());
+        if (byIdFirst.isPresent() && byIdSecond.isPresent()) {
+            WalletEntity firstWallet = byIdFirst.get();
+            WalletEntity secondWallet = byIdSecond.get();
+            if (firstWallet.getBalance().compareTo(walletTransferModel.getTransferAmount()) < 0) {
+                throw new InsufficientFundsException();
+            }
+            firstWallet.setBalance(firstWallet.getBalance().subtract(walletTransferModel.getTransferAmount()));
+            secondWallet.setBalance(secondWallet.getBalance().add(walletTransferModel.getTransferAmount()));
+            walletRepository.save(firstWallet);
+            walletRepository.save(secondWallet);
+        } else {
+            throw new WalletNotFoundException();
         }
     }
 

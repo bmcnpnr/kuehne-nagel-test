@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
+//TODO put strings into constant values
+
 @RestController
 public class WalletController {
 
@@ -67,8 +69,23 @@ public class WalletController {
     }
 
     @PatchMapping("/wallets/transfer")
-    public String walletToWalletTransaction(@RequestBody WalletTransferModel walletTransferModel) {
-        return "wallet to wallet transaction";
+    public ResponseEntity<?> walletToWalletTransaction(@RequestBody WalletTransferModel walletTransferModel) {
+        if (walletTransferModel.getFirstWalletId().equals(walletTransferModel.getSecondWalletId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wallet ids are the same");
+        }
+        try {
+            walletService.transferFundsBetweenWallets(walletTransferModel);
+            return ResponseEntity.ok("Transferred " + walletTransferModel.getTransferAmount() + " from Wallet with id: "
+                    + walletTransferModel.getFirstWalletId() + " to Wallet with id: " + walletTransferModel.getSecondWalletId());
+        } catch (WalletNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet was not found");
+
+        } catch (InsufficientFundsException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wallet has insufficient funds");
+
+        }
     }
 
     @Autowired

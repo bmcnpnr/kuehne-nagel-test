@@ -3,6 +3,7 @@ package com.kuehne.nagel.service;
 import com.kuehne.nagel.entity.WalletEntity;
 import com.kuehne.nagel.exception.InsufficientFundsException;
 import com.kuehne.nagel.exception.WalletNotFoundException;
+import com.kuehne.nagel.model.WalletTransferModel;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface WalletService {
     void topUpWallet(Long walletId, BigDecimal amount) throws WalletNotFoundException;
 
     void withdrawFromWallet(Long walletId, BigDecimal amount) throws WalletNotFoundException, InsufficientFundsException;
+
+    void transferFundsBetweenWallets(WalletTransferModel walletTransferModel) throws WalletNotFoundException, InsufficientFundsException;
 }
