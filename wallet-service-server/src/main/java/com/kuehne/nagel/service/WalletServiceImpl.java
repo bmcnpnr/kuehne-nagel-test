@@ -77,11 +77,12 @@ public class WalletServiceImpl implements WalletService {
         if (byIdFirst.isPresent() && byIdSecond.isPresent()) {
             WalletEntity firstWallet = byIdFirst.get();
             WalletEntity secondWallet = byIdSecond.get();
-            if (firstWallet.getBalance().compareTo(walletTransferModel.getTransferAmount()) < 0) {
+            BigDecimal transferAmount = walletTransferModel.getTransferAmount();
+            if (firstWallet.getBalance().compareTo(transferAmount) < 0) {
                 throw new InsufficientFundsException();
             }
-            firstWallet.setBalance(firstWallet.getBalance().subtract(walletTransferModel.getTransferAmount()));
-            secondWallet.setBalance(secondWallet.getBalance().add(walletTransferModel.getTransferAmount()));
+            firstWallet.setBalance(firstWallet.getBalance().subtract(transferAmount));
+            secondWallet.setBalance(secondWallet.getBalance().add(transferAmount));
             walletRepository.save(firstWallet);
             walletRepository.save(secondWallet);
         } else {
